@@ -38,7 +38,6 @@ abstract class UvSetupTask @Inject constructor(
         val cmdArgs = listOf(
             "powershell.exe",
             "-NoProfile",
-            "-ExecutionPolicy", "Bypass",
             "-File",
             uvInstaller.canonicalPath
         )
