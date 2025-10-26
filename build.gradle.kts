@@ -58,7 +58,7 @@ gradlePlugin {
     plugins {
         create("python-uv-gradle-plugin") {
             id = "com.pswidersk.python-uv-plugin"
-            implementationClass = "com.pswidersk.gradle.python.PythonUvPlugin"
+            implementationClass = "com.pswidersk.gradle.python.uv.UvPlugin"
             displayName = "Gradle Python Plugin"
             description = "Gradle Plugin for Python projects with uv tool."
             tags = listOf(

@@ -5,7 +5,7 @@ import org.gradle.api.tasks.TaskAction
 
 abstract class ListPropertiesTask : DefaultTask() {
 
-    private val extension: Extension = project.pythonUvPlugin
+    private val uvExtension: UvExtension = project.uvExtension
 
     init {
         group = DEFAULT_UV_TASK_GROUP
@@ -14,20 +14,15 @@ abstract class ListPropertiesTask : DefaultTask() {
 
     @TaskAction
     fun setup() {
-        with(extension) {
+        with(uvExtension) {
             logger.lifecycle(
                 """
                 Operating system: $os
-                Arch: ${systemArch.get()}
-                Use home directory: ${useHomeDir.get()}
                 Install directory: ${installDir.get()}
-                Python: ${pythonEnvName.get()}
-                Python environment: ${pythonEnvDir.get()}
-                Conda repo URL: ${uvRepoUrl.get()}
-                ${uvInstaller.get()} version: ${uvVersion.get()}
-                ${uvInstaller.get()} directory: ${uvDir.get()}
-                Conda activate path: ${condaActivatePath.get()}
-                Conda exec location: ${condaExec.get()}
+                uv repo URL: ${uvRepoUrl.get()}
+                uv version: ${uvVersion.get()}
+                uv directory: ${uvDir.get()}
+                uv exec location: ${uvExec.get()}
             """.trimIndent()
             )
         }

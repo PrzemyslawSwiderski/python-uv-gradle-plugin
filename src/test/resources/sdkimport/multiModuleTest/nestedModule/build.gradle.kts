@@ -1,7 +1,7 @@
 import com.pswidersk.gradle.python.sdkimport.SaveSdkImportConfigTask
 
 plugins {
-    id("com.pswidersk.python-plugin")
+    id("com.pswidersk.python-uv-plugin")
 }
 
 tasks.register<SaveSdkImportConfigTask>("saveSdkImportConfigTest") {

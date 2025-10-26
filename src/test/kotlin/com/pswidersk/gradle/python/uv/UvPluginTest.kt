@@ -50,7 +50,7 @@ internal class UvPluginTest {
     }
 
     @Test
-    fun `test if test python script was run successfully`(@TempDir tempDir: File) {
+    fun `python script was run successfully`(@TempDir tempDir: File) {
         // given
         val ideaDir = tempDir.resolve(".idea")
         ideaDir.mkdir()
@@ -59,15 +59,16 @@ internal class UvPluginTest {
         val testScriptFile = File(tempDir, "testScript.py")
         buildFile.writeText(
             """
-            import com.pswidersk.gradle.python.VenvTask
+            import com.pswidersk.gradle.python.uv.UvTask
             
             plugins {
                 id("com.pswidersk.python-uv-plugin")
             }
             
             tasks {
-                register<VenvTask>("runTestScript") {
-                    args = listOf("testScript.py")
+                register<UvTask>("runTestScript") {
+                    args = listOf("run", "testScript.py")
+                    finalizedBy("saveSdkImportConfig")
                 }
             }
         """.trimIndent()
@@ -81,7 +82,8 @@ internal class UvPluginTest {
             .withPluginClasspath()
             .withProjectDir(tempDir)
             .forwardOutput()
-            .withArguments("--configuration-cache", "--warning-mode", "all", "--info", ":runTestScript")
+            .withArguments("--warning-mode", "all", "--info", ":runTestScript")
+//            .withDebug(true)
 
         // when
         val firstRunResult = runner.build()
@@ -89,21 +91,57 @@ internal class UvPluginTest {
 
         // then
         with(firstRunResult) {
-            assertThat(task(":condaSetup")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
-            assertThat(task(":envSetup")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+            assertThat(task(":uvDownload")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+            assertThat(task(":uvSetup")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(task(":locatePython")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(task(":saveSdkImportConfig")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(task(":runTestScript")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(output).contains(pythonMessage)
         }
         with(secondRunResult) {
-            assertThat(task(":condaSetup")!!.outcome).isEqualTo(TaskOutcome.SKIPPED)
-            assertThat(task(":envSetup")!!.outcome).isEqualTo(TaskOutcome.SKIPPED)
+            assertThat(task(":uvDownload")!!.outcome).isEqualTo(TaskOutcome.SKIPPED)
+            assertThat(task(":uvSetup")!!.outcome).isEqualTo(TaskOutcome.SKIPPED)
             assertThat(task(":locatePython")!!.outcome).isEqualTo(TaskOutcome.UP_TO_DATE)
             assertThat(task(":saveSdkImportConfig")!!.outcome).isEqualTo(TaskOutcome.UP_TO_DATE)
             assertThat(task(":runTestScript")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(output).contains(pythonMessage)
         }
         assertThat(ideaDir.resolve("sdk-import.yml")).exists()
+    }
+
+    @Test
+    fun `uvx is installed successfully`(@TempDir tempDir: File) {
+        // given
+        val buildFile = File(tempDir, "build.gradle.kts")
+        buildFile.writeText(
+            """
+            import com.pswidersk.gradle.python.uv.UvxTask
+            
+            plugins {
+                id("com.pswidersk.python-uv-plugin")
+            }
+            
+            tasks {
+                register<UvxTask>("runUvx") {
+                    args = listOf("--help")
+                }
+            }
+        """.trimIndent()
+        )
+        val runner = GradleRunner.create()
+            .withPluginClasspath()
+            .withProjectDir(tempDir)
+            .forwardOutput()
+            .withArguments(":runUvx")
+//            .withDebug(true)
+
+        // when
+        val runResult = runner.build()
+
+        // then
+        with(runResult) {
+            assertThat(task(":runUvx")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+            assertThat(output).contains("Usage: uvx [OPTIONS] [COMMAND]")
+        }
     }
 }

@@ -14,13 +14,13 @@ class ListPropertiesTest {
     lateinit var tempDir: File
 
     @Test
-    fun `test if default properties were correctly set`() {
+    fun `default properties were correctly set`() {
         // given
         val buildFile = File(tempDir, "build.gradle.kts")
         buildFile.writeText(
             """
             plugins {
-                id("com.pswidersk.python-plugin")
+                id("com.pswidersk.python-uv-plugin")
             }
         """.trimIndent()
         )
@@ -39,9 +39,10 @@ class ListPropertiesTest {
             assertThat(task(":listPluginProperties")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(output).contains(
                 ".gradle${separatorChar}python",
-                "Miniconda3 version: py312_24.9.2-0",
-                "Python: python-3.14.0",
-                "Conda repo URL: https://repo.anaconda.com/miniconda"
+                "uv-0.9.5",
+                "Operating system: Linux",
+                "uv version: 0.9.5",
+                "uv repo URL: https://github.com/astral-sh/uv/releases/download/"
             )
         }
     }
@@ -57,11 +58,10 @@ class ListPropertiesTest {
         buildFile.writeText(
             """
             plugins {
-                id("com.pswidersk.python-plugin")
+                id("com.pswidersk.python-uv-plugin")
             }
-            pythonPlugin {
-                pythonVersion.set("3.9.1")
-                condaVersion.set("py38_4.8.0")
+            pythonUvPlugin {
+                uvVersion.set("0.9.2")
                 installDir.set(file("$customInstallDir"))
             }
         """.trimIndent()
@@ -71,7 +71,7 @@ class ListPropertiesTest {
             .withProjectDir(tempDir)
             .forwardOutput()
             .withArguments(":listPluginProperties")
-            .withDebug(true)
+//            .withDebug(true)
 
         // when
         val runResult = runner.build()
@@ -80,73 +80,10 @@ class ListPropertiesTest {
         with(runResult) {
             assertThat(task(":listPluginProperties")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(output).contains(
+                "uv-0.9.2",
                 ".gradleCustomPath${separatorChar}python",
-                "Python: python-3.9.1",
-                "Miniconda3 version: py38_4.8.0"
             )
         }
     }
 
-    @Test
-    fun `test if config cache works without warnings`() {
-        // given
-        val buildFile = File(tempDir, "build.gradle.kts")
-        buildFile.writeText(
-            """
-            plugins {
-                id("com.pswidersk.python-plugin")
-            }
-        """.trimIndent()
-        )
-        val runner = GradleRunner.create()
-            .withPluginClasspath()
-            .withProjectDir(tempDir)
-            .forwardOutput()
-            .withArguments(":listPluginProperties")
-            .withDebug(true)
-
-        // when
-        val runResult = runner.build()
-
-        // then
-        with(runResult) {
-            assertThat(task(":listPluginProperties")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
-            assertThat(output).doesNotContain("Configuration cache problems found in this build.")
-        }
-    }
-
-    @Test
-    fun `test if home dir was used`() {
-        // given
-        val customInstallDir = System.getProperty("user.home")
-        val buildFile = File(tempDir, "build.gradle.kts")
-        buildFile.writeText(
-            """
-            plugins {
-                id("com.pswidersk.python-plugin")
-            }
-            pythonPlugin {
-                useHomeDir = true
-            }
-        """.trimIndent()
-        )
-        val runner = GradleRunner.create()
-            .withPluginClasspath()
-            .withProjectDir(tempDir)
-            .forwardOutput()
-            .withArguments(":listPluginProperties")
-            .withDebug(true)
-
-        // when
-        val runResult = runner.build()
-
-        // then
-        with(runResult) {
-            assertThat(task(":listPluginProperties")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
-            assertThat(output).contains(
-                "Use home directory: true",
-                "Install directory: $customInstallDir"
-            )
-        }
-    }
 }

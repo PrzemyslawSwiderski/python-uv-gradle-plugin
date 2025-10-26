@@ -21,13 +21,13 @@ class GradleSupportTest {
         ]
     )
     @ParameterizedTest
-    fun `test if plugin is working for older gradle versions`(gradleVersion: String) {
+    fun `plugin is working for older gradle versions`(gradleVersion: String) {
         // given
         val buildFile = File(tempDir, "build.gradle.kts")
         buildFile.writeText(
             """
                 plugins {
-                    id("com.pswidersk.python-plugin")
+                    id("com.pswidersk.python-uv-plugin")
                 }
             """.trimIndent()
         )

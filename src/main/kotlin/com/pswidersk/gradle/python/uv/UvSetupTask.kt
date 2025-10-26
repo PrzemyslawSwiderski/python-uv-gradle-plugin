@@ -10,22 +10,22 @@ abstract class UvSetupTask @Inject constructor(
     private val execOperations: ExecOperations,
 ) : DefaultTask() {
 
-    private val extension: Extension = project.pythonUvPlugin
+    private val plugin: UvExtension = project.uvExtension
 
     init {
         group = DEFAULT_UV_TASK_GROUP
         description = "Setup uv tool"
         this.onlyIf {
-            !extension.uvBinDir.get().asFile.exists()
+            !plugin.uvDir.get().asFile.exists()
         }
     }
 
     @TaskAction
     fun setup() {
-        with(extension) {
+        with(plugin) {
             val uvDirFile = uvDir.get().asFile
             val uvInstaller = uvInstallerFile.get().asFile
-            logger.lifecycle("Installing ${this.uvInstaller.get()}...")
+            logger.lifecycle("Installing uv...")
             if (isWindows) {
                 runOnWindows(uvInstaller, uvDirFile)
             } else {
@@ -34,20 +34,16 @@ abstract class UvSetupTask @Inject constructor(
         }
     }
 
-    private fun runOnWindows(condaInstaller: File, condaDirFile: File) = execOperations.exec {
+    private fun runOnWindows(uvInstaller: File, uvDirFile: File) = execOperations.exec {
         val cmdArgs = listOf(
-            "cmd",
-            "/c",
-            "start",
-            "/wait",
-            condaInstaller.canonicalPath,
-            "/InstallationType=JustMe",
-            "/RegisterPython=0",
-            "/AddToPath=0",
-            "/S",
-            "/D=${condaDirFile.canonicalPath}"
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy", "Bypass",
+            "-File",
+            uvInstaller.canonicalPath
         )
         it.commandLine(cmdArgs)
+        it.environment("UV_UNMANAGED_INSTALL", uvDirFile.canonicalPath)
     }
 
     private fun runOnUnix(uvInstaller: File, uvDirFile: File) = execOperations.exec {
