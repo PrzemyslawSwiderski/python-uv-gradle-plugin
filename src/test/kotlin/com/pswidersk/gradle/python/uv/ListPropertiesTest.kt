@@ -40,7 +40,7 @@ class ListPropertiesTest {
             assertThat(output).contains(
                 ".gradle${separatorChar}python",
                 "uv-0.9.5",
-                "Operating system: Linux",
+                "Operating system: $os",
                 "uv version: 0.9.5",
                 "uv repo URL: https://github.com/astral-sh/uv/releases/download/"
             )

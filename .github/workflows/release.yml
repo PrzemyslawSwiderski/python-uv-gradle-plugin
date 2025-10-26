@@ -1,6 +1,6 @@
 # Workflow triggered when new Release is created.
 
-name: Release
+name: ✨ Release
 
 on:
   push:
