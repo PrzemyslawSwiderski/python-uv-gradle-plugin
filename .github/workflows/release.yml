@@ -1,0 +1,49 @@
+# Workflow triggered when new Release is created.
+
+name: Release
+
+on:
+  release:
+    types: [ prereleased, released ]
+
+jobs:
+  release:
+    name: Release Plugin
+    runs-on: ubuntu-latest
+    steps:
+      # Check out current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      # Set up Java environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      # Update Plugin Version to new one
+      - name: Update Version
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          sed -i "s/version.*/version=$VERSION/g" gradle.properties
+
+      # Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Publish plugin to Gradle Repository
+      - name: Publish Plugin
+        run: ./gradlew publishPlugins
+        env:
+          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
+          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+
+  post-release-updates:
+    name: Post Release Updates
+    needs: [ release ]
+    uses: ./.github/workflows/post-release-updates.yml
+    with:
+      release-version: ${{ github.event.release.tag_name }}

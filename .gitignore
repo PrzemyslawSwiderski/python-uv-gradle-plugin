@@ -1,0 +1,8 @@
+.gradle
+.kotlin
+build
+out
+
+.idea
+
+__pycache__
