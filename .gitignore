@@ -2,7 +2,9 @@
 .kotlin
 build
 out
+output.txt
 
 .idea
 
 __pycache__
+.venv

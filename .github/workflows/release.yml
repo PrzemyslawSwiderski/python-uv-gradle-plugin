@@ -3,8 +3,8 @@
 name: Release
 
 on:
-  release:
-    types: [ prereleased, released ]
+  push:
+    tags: ["*.*"]
 
 jobs:
   release:
@@ -13,22 +13,14 @@ jobs:
     steps:
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }}
+        uses: actions/checkout@v5
 
       # Set up Java environment for the next steps
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          distribution: zulu
-          java-version: 17
-
-      # Update Plugin Version to new one
-      - name: Update Version
-        run: |
-          VERSION="${{ github.event.release.tag_name }}"
-          sed -i "s/version.*/version=$VERSION/g" gradle.properties
+          distribution: temurin
+          java-version: 21
 
       # Setup Gradle
       - name: Setup Gradle
@@ -43,7 +35,7 @@ jobs:
 
   post-release-updates:
     name: Post Release Updates
-    needs: [ release ]
+    needs: [release]
     uses: ./.github/workflows/post-release-updates.yml
     with:
-      release-version: ${{ github.event.release.tag_name }}
+      release-version: ${{ github.ref }}
