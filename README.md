@@ -3,7 +3,7 @@
 
 # Python uv Gradle Plugin
 
-A small Gradle plugin that wraps the [uv CLI](https://docs.astral.sh/uv/).
+Gradle plugin that wraps the [uv CLI](https://docs.astral.sh/uv/).
 It automatically downloads and installs it. Developer can use helpful tasks to integrate Python projects into
 Gradle build system.
 
