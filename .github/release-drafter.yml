@@ -1,19 +1,31 @@
 name-template: "v$RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
+
 categories:
   - title: "🚀 Features"
-    labels:
-      - "feature"
-      - "enhancement"
+    label: "feature"
   - title: "🐛 Bug Fixes"
-    labels:
-      - "fix"
-      - "bugfix"
-      - "bug"
+    label: "bugfix"
   - title: "🧰 Maintenance"
     label: "chore"
+
 change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+
+autolabeler: # https://github.com/marketplace/actions/release-drafter#autolabeler
+  - label: 'feature'
+    branch:
+      - '/feature\/.+/'
+      - '/feat\/.+/'
+  - label: 'bugfix'
+    branch:
+      - '/fix\/.+/'
+      - '/bugfix\/.+/'
+  - label: 'chore'
+    branch:
+      - '/docs{0,1}\/.+/'
+      - '/chore\/.+/'
+
 version-resolver:
   major:
     labels:
@@ -21,10 +33,14 @@ version-resolver:
   minor:
     labels:
       - "minor"
+      - "feature"
   patch:
     labels:
       - "patch"
+      - "chore"
+      - "bugfix"
   default: patch
+
 template: |
   ## Changes
 
