@@ -1,7 +1,7 @@
 rootProject.name = "python-uv-gradle-plugin"
 
 include(
-//    "examples:sample-python-project",
+    "examples:sample-python-project",
 )
 
 pluginManagement {
