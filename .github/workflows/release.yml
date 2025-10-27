@@ -3,6 +3,7 @@
 name: ✨ Release
 
 on:
+  workflow_dispatch:
   push:
     tags: ["*.*"]
 
@@ -35,6 +36,9 @@ jobs:
 
   post-release-updates:
     name: Post Release Updates
+    permissions:
+      contents: write
+      pull-requests: write
     needs: [release]
     uses: ./.github/workflows/post-release-updates.yml
     with:
