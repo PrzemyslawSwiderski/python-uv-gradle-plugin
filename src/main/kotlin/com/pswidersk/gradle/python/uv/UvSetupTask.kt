@@ -35,14 +35,17 @@ abstract class UvSetupTask @Inject constructor(
     }
 
     private fun runOnWindows(uvInstaller: File, uvDirFile: File) = execOperations.exec {
-//        val cmdArgs = listOf(
-//            "powershell",
-//            "-ExecutionPolicy", "Bypass",
-//            "-File",
-//            uvInstaller.canonicalPath
-//        )
-        it.executable = uvInstaller.canonicalPath
-//        it.commandLine(cmdArgs)
+        val unblockCmd = "Unblock-File -Path '${uvInstaller.canonicalPath}' -ErrorAction SilentlyContinue"
+        val installCmd = "& '${uvInstaller.canonicalPath}'"
+
+        // Combine both commands in PowerShell with &&
+        val psCommand = "$unblockCmd; $installCmd"
+
+        it.commandLine(
+            "powershell",
+            "-ExecutionPolicy", "Bypass",
+            "-Command", psCommand
+        )
         it.environment("UV_UNMANAGED_INSTALL", uvDirFile.canonicalPath)
     }
 
