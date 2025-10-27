@@ -1,9 +1,9 @@
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FPrzemyslawSwiderski%2Fpython-uv-gradle-plugin%2Fbadge&style=plastic)](https://actions-badge.atrox.dev/PrzemyslawSwiderski/python-uv-gradle-plugin/goto)
+[![🥁 Build](https://github.com/PrzemyslawSwiderski/python-uv-gradle-plugin/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/PrzemyslawSwiderski/python-uv-gradle-plugin/actions/workflows/gradle-build.yml)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/PrzemyslawSwiderski/python-uv-gradle-plugin?label=Plugin%20Version&sort=semver&style=plastic)](https://plugins.gradle.org/plugin/com.pswidersk.python-uv-plugin)
 
 # Python uv Gradle Plugin
 
-Gradle plugin that wraps the [uv CLI](https://docs.astral.sh/uv/).
+Gradle plugin that wraps the **[uv tool](https://docs.astral.sh/uv/)**.
 It automatically downloads and installs it. Developer can use helpful tasks to integrate Python projects into
 Gradle build system.
 
