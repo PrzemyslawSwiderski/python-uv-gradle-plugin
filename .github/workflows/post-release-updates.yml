@@ -15,6 +15,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Print version
+        run: echo "Post-release job for version ${{ inputs.release-version }}"
+
       # Check out current repository
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -23,8 +26,6 @@ jobs:
       - name: Update Samples Version
         run: |
           VERSION="${{ inputs.release-version }}"
-          # Remove leading 'v' or 'V' if present
-          VERSION="${VERSION#[vV]}"
           sed -i "s/pythonPluginVersionForExamples.*/pythonPluginVersionForExamples=$VERSION/g" gradle.properties
 
       # Create a pull request

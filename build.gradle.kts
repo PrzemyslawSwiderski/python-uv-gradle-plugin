@@ -7,10 +7,9 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.pluginPublish)
     alias(libs.plugins.pluginVersions)
-    alias(libs.plugins.axiom.release)
 }
 
-version = scmVersion.version
+version = System.getenv("PLUGIN_VERSION") ?: "unspecified"
 
 repositories {
     mavenLocal()

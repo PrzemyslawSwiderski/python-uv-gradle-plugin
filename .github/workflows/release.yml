@@ -4,33 +4,44 @@ name: ✨ Release
 
 on:
   workflow_dispatch:
+    inputs:
+      mock-tag:
+        description: "Tag version (e.g., v1.2.3)"
+        required: true
   push:
-    tags: ["*.*"]
+    tags: [ "*.*" ]
 
 jobs:
   release:
     name: Release Plugin
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
-      # Check out current repository
       - name: Fetch Sources
         uses: actions/checkout@v5
 
-      # Set up Java environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
 
-      # Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Publish plugin to Gradle Repository
+      - name: Determine Version
+        id: version
+        run: |
+          VERSION="${{ github.event.inputs.mock-tag }}"
+          VERSION="${VERSION:-${{ github.ref_name }}}"
+          VERSION="${VERSION#[vV]}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Publish Plugin
         run: ./gradlew publishPlugins
         env:
+          PLUGIN_VERSION: ${{ steps.version.outputs.version }}
           GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
           GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
 
@@ -42,4 +53,4 @@ jobs:
     needs: [release]
     uses: ./.github/workflows/post-release-updates.yml
     with:
-      release-version: ${{ github.ref }}
+      release-version: ${{ needs.release.outputs.version }}

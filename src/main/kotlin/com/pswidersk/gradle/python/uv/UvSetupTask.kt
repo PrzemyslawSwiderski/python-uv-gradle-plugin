@@ -37,6 +37,7 @@ abstract class UvSetupTask @Inject constructor(
     private fun runOnWindows(uvInstaller: File, uvDirFile: File) = execOperations.exec {
         it.commandLine(
             "powershell",
+            "-NoProfile",
             "-ExecutionPolicy", "Bypass",
             "-File", uvInstaller.canonicalPath
         )

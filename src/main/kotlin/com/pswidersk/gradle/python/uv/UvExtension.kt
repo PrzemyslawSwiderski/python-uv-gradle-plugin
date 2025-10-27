@@ -57,7 +57,7 @@ abstract class UvExtension @Inject constructor(
     internal val uvExec: RegularFileProperty = objects.fileProperty().convention(
         providerFactory.provider {
             if (OperatingSystem.current().isWindows)
-                this.uvDir.get().dir("bin").file("uv.exe")
+                this.uvDir.get().file("uv.exe")
             else
                 this.uvDir.get().file("uv")
         }
@@ -66,7 +66,7 @@ abstract class UvExtension @Inject constructor(
     internal val uvxExec: RegularFileProperty = objects.fileProperty().convention(
         providerFactory.provider {
             if (OperatingSystem.current().isWindows)
-                this.uvDir.get().dir("bin").file("uvx.exe")
+                this.uvDir.get().file("uvx.exe")
             else
                 this.uvDir.get().file("uvx")
         }

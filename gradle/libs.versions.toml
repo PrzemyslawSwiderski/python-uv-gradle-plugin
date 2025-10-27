@@ -11,7 +11,6 @@ kotlin = "2.2.20"
 kover = "0.9.3"
 pluginPublish = "2.0.0"
 versions = "0.53.0"
-axiom = "1.21.0"
 
 [libraries]
 commonsIO = { group = "commons-io", name = "commons-io", version.ref = "commonsIO" }
@@ -27,7 +26,6 @@ kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
 pluginVersions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
-axiom-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axiom" }
 
 [bundles]
 test = [
