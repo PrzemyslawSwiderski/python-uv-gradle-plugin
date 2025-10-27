@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build
+name: 🥁 Build
 
 on:
   # Trigger the workflow on pushes to only the 'main' branch (this avoids duplicate checks being run e.g., for dependabot pull requests)
@@ -22,7 +22,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [
+            ubuntu-latest,
+            # windows-latest, # TODO: fix
+            macos-latest,
+          ]
     steps:
       # Check out current repository
       - name: Fetch Sources

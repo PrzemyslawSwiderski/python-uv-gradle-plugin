@@ -1,60 +1,55 @@
-import com.pswidersk.gradle.python.VenvTask
+import com.pswidersk.gradle.python.uv.UvTask
+import com.pswidersk.gradle.python.uv.UvxTask
+import java.io.ByteArrayInputStream
 
 plugins {
     id("com.pswidersk.python-uv-plugin")
 }
 
 pythonUvPlugin {
+    uvVersion = "0.9.5"
 }
 
 tasks {
 
-//    register<VenvTask>("condaInfo") {
-//        venvExec = "conda"
-//        args = listOf("info")
-//    }
-//
-//    register<VenvTask>("runInlineScript") {
-//        doFirst {
-//            val scriptFile = temporaryDir.resolve("inlineScript.py")
-//            scriptFile.writeText(
-//                """
-//import random
-//
-//lucky_numbers = []
-//print('Welcome To Lucky Lottery Numbers')
-//for num in range(0,5):
-//    random_num = random.randint(1, 100)
-//    lucky_numbers.append(random_num)
-//print(f'Lucky numbers are: {lucky_numbers}')
-//            """.trimIndent()
-//            )
-//            inputFile = scriptFile
-//        }
-//    }
-//
-//    register<VenvTask>("runQuickSort") {
-//        workingDir = projectDir.resolve("main")
-//        args = listOf("quicksort.py")
-//    }
-//
-//    val pipInstall by registering(VenvTask::class) {
-//        venvExec = "pip"
-//        args = listOf("install", "--isolated", "-r", "requirements.txt")
-//    }
-//
-//    register<VenvTask>("runNumpy") {
-//        workingDir = projectDir.resolve("main")
-//        args = listOf("numpy_test.py")
-//        environment = mapOf("ENV_VAR_TO_PRINT" to "sampleEnvVar")
-//        dependsOn(pipInstall)
-//    }
-//    register<VenvTask>("runPyTests") {
-//        venvExec = "pytest"
-//        workingDir = projectDir.resolve("test")
-//        environment = mapOf("PYTHONPATH" to projectDir.resolve("main").canonicalPath)
-//        args = listOf("test_quicksort.py")
-//        dependsOn(pipInstall)
-//    }
+    val sync by registering(UvTask::class) {
+        args = listOf("sync")
+        finalizedBy("saveSdkImportConfig")
+    }
+
+    register<UvTask>("runQuickSort") {
+        args = listOf("run", "quicksort.py")
+        outputFile = file("output.txt")
+        dependsOn(sync)
+    }
+
+    register<UvTask>("runAnalyzeData") {
+        args = listOf("run", "analyze_data.py")
+        dependsOn(sync)
+    }
+
+    register<UvTask>("runInlineCode") {
+        args = listOf("run", "-")
+        // language="Python"
+        val pythonCode = """
+            a = 2
+            b = 3
+            c = a + b
+            print(f"{c=}")
+        """.trimIndent()
+        standardInput = ByteArrayInputStream(pythonCode.toByteArray())
+    }
+
+    register<UvxTask>("formatCode") {
+        args = listOf("black@25.9.0", ".")
+    }
+
+    register<UvxTask>("runHello") {
+        args = listOf(
+            "--from", "cowsay", "cowsay", "-t",
+            "\uD83D\uDC2E Hello there from uv Gradle Plugin \uD83D\uDC04"
+        )
+    }
+
 
 }

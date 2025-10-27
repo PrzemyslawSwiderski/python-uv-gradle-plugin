@@ -5,9 +5,9 @@ import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.getByType
 
 /**
- * Gets the [Extension] that is installed on the project.
+ * Gets the [UvExtension] that is installed on the project.
  */
-internal val Project.pythonUvPlugin: Extension
+internal val Project.uvExtension: UvExtension
     get() = extensions.getByType()
 
 /**
@@ -25,34 +25,6 @@ internal val os: String
             OperatingSystem.current().isMacOsX -> "MacOSX"
             isWindows -> "Windows"
             else -> "Linux"
-        }
-    }
-
-
-/**
- * Returns system architecture name
- */
-internal val arch: String
-    get() {
-        val arch = System.getProperty("os.arch")
-        return when {
-            OperatingSystem.current().isMacOsX -> when (arch) {
-                "amd64" -> "x86_64"
-                "aarch64" -> "arm64"
-                else -> arch
-            }
-
-            isWindows -> when (arch) {
-                "amd64" -> "x86_64"
-                "aarch64" -> "x86_64" // no aarch64/arm64 installer available for windows
-                else -> arch
-            }
-
-            else -> when (arch) {
-                "aarch64" -> "aarch64"
-                "amd64" -> "x86_64"
-                else -> arch
-            }
         }
     }
 

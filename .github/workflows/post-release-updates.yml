@@ -1,4 +1,4 @@
-name: Post Release Updates
+name: ☃️ Post Release Updates
 
 on:
   workflow_call:

@@ -10,14 +10,14 @@ import java.util.*
 
 abstract class UvDownloadTask : DefaultTask() {
 
-    private val plugin: Extension = project.pythonUvPlugin
+    private val plugin: UvExtension = project.uvExtension
     private val progressLogger = ProgressLogger(consumer = { msg -> logger.lifecycle(msg) })
 
     init {
         group = DEFAULT_UV_TASK_GROUP
         description = "Download uv tool"
         this.onlyIf {
-            !plugin.uvBinDir.get().asFile.exists()
+            !plugin.uvDir.get().asFile.exists()
         }
     }
 
@@ -31,8 +31,7 @@ abstract class UvDownloadTask : DefaultTask() {
 
     private fun downloadUv(destinationFile: File) {
         val uvRepoUrl = plugin.uvRepoUrl.get()
-        val uvInstaller = plugin.uvInstaller.get()
-        logger.lifecycle("Downloading $uvInstaller to: ${destinationFile.canonicalPath} from: $uvRepoUrl (please wait, it can take a while)")
+        logger.lifecycle("Downloading uv to: ${destinationFile.canonicalPath} from: $uvRepoUrl (please wait, it can take a while)")
         val downloadUri = "${uvRepoUrl}/${plugin.uvVersion.get()}/uv-installer.$exec"
         val connection = URI.create(downloadUri).toURL().openConnection()
         addBasicAuth(connection)

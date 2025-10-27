@@ -11,21 +11,16 @@ import org.gradle.api.provider.ProviderFactory
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.mapProperty
 import org.gradle.kotlin.dsl.property
-import java.io.File
 import javax.inject.Inject
 
-abstract class Extension @Inject constructor(
+abstract class UvExtension @Inject constructor(
     project: Project,
     providerFactory: ProviderFactory,
     objects: ObjectFactory,
     fileFactory: FileFactory
 ) {
 
-    val pythonVersion: Property<String> = objects.property<String>().convention(DEFAULT_PYTHON_VERSION)
-
     val uvVersion: Property<String> = objects.property<String>().convention(DEFAULT_UV_VERSION)
-
-    val uvInstaller: Property<String> = objects.property<String>().convention(DEFAULT_UV_INSTALLER)
 
     val uvRepoUrl: Property<String> = objects.property<String>().convention(DEFAULT_UV_REPO_URL)
 
@@ -35,15 +30,11 @@ abstract class Extension @Inject constructor(
 
     val uvRepoHeaders: MapProperty<String, String> = objects.mapProperty()
 
-    val useHomeDir: Property<Boolean> = objects.property<Boolean>().convention(false)
-
     val installDir: DirectoryProperty = objects.directoryProperty().convention(
         providerFactory.provider {
             baseInstallDirectory.get().dir(GRADLE_FILES_DIR).dir(PYTHON_ENVS_DIR)
         }
     )
-
-    val systemArch: Property<String> = objects.property<String>().convention(arch)
 
     val ideaDir: DirectoryProperty = objects.directoryProperty()
         .convention(fileFactory.dir(project.rootDir.resolve(DEFAULT_IDEA_DIR)))
@@ -51,7 +42,7 @@ abstract class Extension @Inject constructor(
     internal val uvDir: DirectoryProperty = objects.directoryProperty().convention(
         providerFactory.provider {
             installDir.get()
-                .dir("${uvInstaller.get()}-${uvVersion.get()}")
+                .dir("uv-${uvVersion.get()}")
         }
     )
 
@@ -59,37 +50,25 @@ abstract class Extension @Inject constructor(
         providerFactory.provider {
             val installerDirFile = installDir.get().asFile
             installerDirFile.mkdirs()
-            installDir.get().file("${uvInstaller.get()}-${uvVersion.get()}-$os-${systemArch.get()}.$exec")
+            installDir.get().file("uv-${uvVersion.get()}.$exec")
         }
     )
 
-    internal val pythonEnvName: Property<String> = objects.property<String>().convention(
-        providerFactory.provider { "python-${pythonVersion.get()}" }
-    )
-
-    internal val pythonEnvDir: DirectoryProperty = objects.directoryProperty().convention(
-        providerFactory.provider { uvDir.get().dir("envs").dir(pythonEnvName.get()) }
-    )
-
-    internal val uvBinDir: DirectoryProperty = objects.directoryProperty().convention(
-        providerFactory.provider { uvDir.get().dir("condabin") }
-    )
-
-    internal val condaActivatePath: RegularFileProperty = objects.fileProperty().convention(
+    internal val uvExec: RegularFileProperty = objects.fileProperty().convention(
         providerFactory.provider {
             if (OperatingSystem.current().isWindows)
-                uvBinDir.get().file("activate.bat")
+                this.uvDir.get().dir("bin").file("uv.exe")
             else
-                uvDir.get().dir("bin").file("activate")
+                this.uvDir.get().file("uv")
         }
     )
 
-    internal val condaExec: RegularFileProperty = objects.fileProperty().convention(
+    internal val uvxExec: RegularFileProperty = objects.fileProperty().convention(
         providerFactory.provider {
             if (OperatingSystem.current().isWindows)
-                this.uvBinDir.get().file("conda.bat")
+                this.uvDir.get().dir("bin").file("uvx.exe")
             else
-                this.uvBinDir.get().file("conda")
+                this.uvDir.get().file("uvx")
         }
     )
 
@@ -101,12 +80,7 @@ abstract class Extension @Inject constructor(
 
     internal val baseInstallDirectory: DirectoryProperty = objects.directoryProperty().convention(
         providerFactory.provider {
-            if (useHomeDir.get()) {
-                val homePath = providerFactory.systemProperty("user.home").get()
-                fileFactory.dir(File(homePath))
-            } else {
-                fileFactory.dir(project.rootDir)
-            }
+            fileFactory.dir(project.rootDir)
         }
     )
 

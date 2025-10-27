@@ -8,4 +8,7 @@ def quicksort(arr):
     return quicksort(left) + middle + quicksort(right)
 
 
-print(quicksort([3, 6, 8, 10, 1, 2, 1]))
+input_arr = [3, 6, 8, 10, 1, 2, 1]
+print(f"{input_arr=}")
+sorted_arr = quicksort(input_arr)
+print(f"{sorted_arr=}")
