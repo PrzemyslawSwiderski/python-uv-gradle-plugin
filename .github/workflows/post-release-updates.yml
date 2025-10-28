@@ -34,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ inputs.release-version }}"
-          BRANCH="post-release-update-$VERSION"
+          BRANCH="chore/post-release-update-$VERSION"
           LABEL="post release update"
 
           git config user.email "action@github.com"
