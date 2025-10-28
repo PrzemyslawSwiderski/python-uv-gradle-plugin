@@ -24,7 +24,7 @@ jobs:
       matrix:
         os: [
             ubuntu-latest,
-            windows-2022,
+            windows-latest,
             macos-latest,
           ] # https://github.com/actions/runner-images?tab=readme-ov-file#available-images
     steps:

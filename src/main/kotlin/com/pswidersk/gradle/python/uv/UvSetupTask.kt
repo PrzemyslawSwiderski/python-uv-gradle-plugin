@@ -42,6 +42,7 @@ abstract class UvSetupTask @Inject constructor(
             "-File", uvInstaller.canonicalPath
         )
         it.environment("UV_UNMANAGED_INSTALL", uvDirFile.canonicalPath)
+        it.environment("PSModulePath", "")
     }
 
     private fun runOnUnix(uvInstaller: File, uvDirFile: File) = execOperations.exec {
