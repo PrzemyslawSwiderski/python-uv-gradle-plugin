@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "chore"
+    groups:
+      gradle-dependencies:
+        patterns:
+          - "*"

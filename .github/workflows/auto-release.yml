@@ -1,0 +1,36 @@
+name: 🤖 Auto Publish Draft Release
+
+on:
+  schedule:
+    - cron: "0 12 * * 2" # Tuesdays at 12 PM UTC
+  workflow_dispatch:
+
+jobs:
+  publish-draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Publish latest draft release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            const draftRelease = releases.find(release => release.draft);
+
+            if (draftRelease) {
+              await github.rest.repos.updateRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: draftRelease.id,
+                draft: false
+              });
+              console.log(`Published draft release: ${draftRelease.tag_name}`);
+            } else {
+              console.log('No draft releases found');
+            }
