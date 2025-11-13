@@ -60,7 +60,7 @@ Property/MapProperty/DirectoryProperty/etc).
 
 - `uvVersion: Property<String>`
     - Type: `Property<String>`
-    - Default: `DEFAULT_UV_VERSION` (plugin default). Example override: `uvVersion = "0.9.5"`.
+    - Default: `DEFAULT_UV_VERSION` (plugin default). Example override: `uvVersion = "0.9.9"`.
     - Purpose: The `uv` release/version to install and use.
 
 - `uvRepoUrl: Property<String>`

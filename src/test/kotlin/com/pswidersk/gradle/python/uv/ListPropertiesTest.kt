@@ -39,9 +39,9 @@ class ListPropertiesTest {
             assertThat(task(":listPluginProperties")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(output).contains(
                 ".gradle${separatorChar}python",
-                "uv-0.9.5",
+                "uv-0.9.9",
                 "Operating system: $os",
-                "uv version: 0.9.5",
+                "uv version: 0.9.9",
                 "uv repo URL: https://github.com/astral-sh/uv/releases/download/"
             )
         }
@@ -61,7 +61,7 @@ class ListPropertiesTest {
                 id("com.pswidersk.python-uv-plugin")
             }
             pythonUvPlugin {
-                uvVersion.set("0.9.2")
+                uvVersion.set("0.9.9")
                 installDir.set(file("$customInstallDir"))
             }
         """.trimIndent()
@@ -80,7 +80,7 @@ class ListPropertiesTest {
         with(runResult) {
             assertThat(task(":listPluginProperties")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
             assertThat(output).contains(
-                "uv-0.9.2",
+                "uv-0.9.9",
                 ".gradleCustomPath${separatorChar}python",
             )
         }
