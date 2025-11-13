@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-draft:
+  find-draft:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     outputs:
       tag: ${{ steps.find.outputs.tag }}
@@ -30,24 +30,35 @@ jobs:
           echo "Found tag: $DRAFT_TAG"
           echo "tag=$DRAFT_TAG" >> $GITHUB_OUTPUT
 
-      - name: Publish draft release
-        if: steps.find.outputs.tag != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release edit "${{ steps.find.outputs.tag }}" --draft=false
-          echo "Published release: ${{ steps.find.outputs.tag }}"
-
   release-plugin:
     permissions:
       contents: write
       pull-requests: write
 
-    needs: publish-draft
-    if: needs.publish-draft.outputs.tag != ''
+    needs: find-draft
+    if: needs.find-draft.outputs.tag != ''
     uses: ./.github/workflows/release.yml
     with:
-      tag: ${{ needs.publish-draft.outputs.tag }}
+      tag: ${{ needs.find-draft.outputs.tag }}
     secrets: # Secrets are not automatically forwarded in a workflow_call usage
       GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
       GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+
+  publish-draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    needs: [ find-draft, release-plugin ]
+    if: needs.find-draft.outputs.tag != ''
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Publish draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit "${{ needs.find-draft.outputs.tag }}" --draft=false
+          echo "Published release: ${{ needs.find-draft.outputs.tag }}"
