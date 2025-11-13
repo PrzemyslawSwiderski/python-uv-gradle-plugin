@@ -25,7 +25,7 @@ const val PLUGIN_TASKS_GROUP_NAME = "python"
 /**
  * Default uv version. [List of available releases](https://github.com/astral-sh/uv/releases).
  */
-const val DEFAULT_UV_VERSION = "0.9.5"
+const val DEFAULT_UV_VERSION = "0.9.9"
 
 /**
  * Default uv repository URL.
