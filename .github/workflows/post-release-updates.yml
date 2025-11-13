@@ -54,3 +54,16 @@ jobs:
             --body "Current pull request contains patched files for the \`$VERSION\` version." \
             --label "$LABEL" \
             --head $BRANCH
+          
+          # Create PR and capture URL or number
+          PR_URL=$(gh pr create \
+          --title "Post release update - \`$VERSION\`" \
+          --body "Current pull request contains patched files for the \`$VERSION\` version." \
+          --label "$LABEL" \
+          --head $BRANCH \
+          --json url --jq .url)
+          
+          echo "Created PR at $PR_URL"
+          
+          # Auto-merge PR (using merge method; can also use squash or rebase)
+          gh pr merge --auto --squash --delete-branch "$PR_URL"

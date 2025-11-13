@@ -4,8 +4,24 @@ name: ✨ Release
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Optional tag to use"
+        required: false
+        type: string
+
   push:
     tags: [ "*.*" ]
+
+  workflow_call:
+    inputs:
+      tag:
+        description: "Tag to use"
+        required: true
+        type: string
+
+env:
+  VERSION_TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   release:
@@ -29,8 +45,7 @@ jobs:
       - name: Determine Version
         id: version
         run: |
-          VERSION="${{ github.ref_name }}"
-          VERSION="${VERSION#[vV]}"
+          VERSION="${VERSION_TAG#[vV]}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Publish Plugin
@@ -45,7 +60,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    needs: [release]
+    needs: [ release ]
     uses: ./.github/workflows/post-release-updates.yml
     with:
       release-version: ${{ needs.release.outputs.version }}

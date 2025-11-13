@@ -11,26 +11,40 @@ jobs:
     permissions:
       contents: write
 
+    outputs:
+      tag: ${{ steps.find.outputs.tag }}
+
     steps:
-      - name: Publish latest draft release
-        uses: actions/github-script@v7
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
-          script: |
-            const { data: releases } = await github.rest.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
+          fetch-depth: 0
 
-            const draftRelease = releases.find(release => release.draft);
+      - id: find
+        name: Find draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DRAFT_TAG=$(gh release list --limit 100 --json tagName,isDraft \
+            --jq '.[] | select(.isDraft == true) | .tagName' | head -n 1)
+          echo "Found tag: $DRAFT_TAG"
+          echo "tag=$DRAFT_TAG" >> $GITHUB_OUTPUT
 
-            if (draftRelease) {
-              await github.rest.repos.updateRelease({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: draftRelease.id,
-                draft: false
-              });
-              console.log(`Published draft release: ${draftRelease.tag_name}`);
-            } else {
-              console.log('No draft releases found');
-            }
+      - name: Publish draft release
+        if: steps.find.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit "${{ steps.find.outputs.tag }}" --draft=false
+          echo "Published release: ${{ steps.find.outputs.tag }}"
+
+  release-plugin:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    needs: publish-draft
+    if: needs.publish-draft.outputs.tag != ''
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.publish-draft.outputs.tag }}
