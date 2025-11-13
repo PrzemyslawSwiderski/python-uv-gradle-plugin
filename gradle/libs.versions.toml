@@ -1,13 +1,13 @@
 [versions]
 # libraries
-commonsIO = "2.20.0"
+commonsIO = "2.21.0"
 snakeyaml = "2.5"
-junit = "6.0.0"
+junit = "6.0.1"
 assertj = "3.27.6"
 wiremock = "3.13.1"
 
 # plugins
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 kover = "0.9.3"
 pluginPublish = "2.0.0"
 versions = "0.53.0"
