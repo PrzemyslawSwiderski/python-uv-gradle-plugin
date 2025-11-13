@@ -29,8 +29,7 @@ jobs:
       - name: Determine Version
         id: version
         run: |
-          VERSION="${{ github.event.inputs.mock-tag }}"
-          VERSION="${VERSION:-${{ github.ref_name }}}"
+          VERSION="${{ github.ref_name }}}"
           VERSION="${VERSION#[vV]}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
