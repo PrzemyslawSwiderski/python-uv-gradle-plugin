@@ -4,10 +4,6 @@ name: ✨ Release
 
 on:
   workflow_dispatch:
-    inputs:
-      mock-tag:
-        description: "Tag version (e.g., v1.2.3)"
-        required: true
   push:
     tags: [ "*.*" ]
 
