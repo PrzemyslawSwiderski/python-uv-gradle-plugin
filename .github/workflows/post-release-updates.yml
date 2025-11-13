@@ -36,34 +36,27 @@ jobs:
           VERSION="${{ inputs.release-version }}"
           BRANCH="chore/post-release-update-$VERSION"
           LABEL="post release update"
-
+          
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-
+          
           git checkout -b $BRANCH
           git commit -am "Post release update - $VERSION"
           git push --set-upstream origin $BRANCH
-
+          
           gh label create "$LABEL" \
             --description "Pull requests with post release updates" \
             --force \
             || true
-
-          gh pr create \
+          
+          # Create PR and capture URL
+          PR_URL=$(gh pr create \
             --title "Post release update - \`$VERSION\`" \
             --body "Current pull request contains patched files for the \`$VERSION\` version." \
             --label "$LABEL" \
-            --head $BRANCH
-          
-          # Create PR and capture URL or number
-          PR_URL=$(gh pr create \
-          --title "Post release update - \`$VERSION\`" \
-          --body "Current pull request contains patched files for the \`$VERSION\` version." \
-          --label "$LABEL" \
-          --head $BRANCH \
-          --json url --jq .url)
+            --head $BRANCH)
           
           echo "Created PR at $PR_URL"
           
-          # Auto-merge PR (using merge method; can also use squash or rebase)
+          # Auto-merge PR (using squash method)
           gh pr merge --auto --squash --delete-branch "$PR_URL"

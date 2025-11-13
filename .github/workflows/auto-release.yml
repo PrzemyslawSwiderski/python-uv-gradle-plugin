@@ -9,7 +9,7 @@ jobs:
   find-draft:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # 'write' is REQUIRED in order to be able to read drafts as well !!!
 
     outputs:
       tag: ${{ steps.find.outputs.tag }}
