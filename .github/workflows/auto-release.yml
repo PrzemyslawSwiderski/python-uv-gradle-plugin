@@ -9,7 +9,7 @@ jobs:
   find-draft:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     outputs:
       tag: ${{ steps.find.outputs.tag }}
