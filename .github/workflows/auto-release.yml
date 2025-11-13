@@ -25,10 +25,29 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          DRAFT_TAG=$(gh release list --limit 100 --json tagName,isDraft \
-            --jq '.[] | select(.isDraft == true) | .tagName' | head -n 1)
-          echo "Found tag: $DRAFT_TAG"
-          echo "tag=$DRAFT_TAG" >> $GITHUB_OUTPUT
+          echo "🔍 Searching for draft releases..."
+          echo "Fetching release list..."
+          
+          RELEASES=$(gh release list --limit 100 --json tagName,isDraft)
+          echo "📋 All releases (first 100):"
+          echo "$RELEASES" | jq -r '.[] | "  - \(.tagName) (draft: \(.isDraft))"'
+          
+          echo ""
+          echo "🔎 Filtering for draft releases..."
+          DRAFT_RELEASES=$(echo "$RELEASES" | jq -r '.[] | select(.isDraft == true) | .tagName')
+          
+          if [ -z "$DRAFT_RELEASES" ]; then
+            echo "❌ No draft releases found"
+            echo "tag=" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Found draft release(s):"
+            echo "$DRAFT_RELEASES"
+          
+            DRAFT_TAG=$(echo "$DRAFT_RELEASES" | head -n 1)
+            echo ""
+            echo "🎯 Selected draft release: $DRAFT_TAG"
+            echo "tag=$DRAFT_TAG" >> $GITHUB_OUTPUT
+          fi
 
   release-plugin:
     permissions:
