@@ -49,13 +49,22 @@ jobs:
             echo "tag=$DRAFT_TAG" >> $GITHUB_OUTPUT
           fi
 
+  call-build:
+    permissions:
+      checks: write
+      pull-requests: write
+
+    needs: find-draft
+    if: needs.find-draft.outputs.tag != ''
+    uses: ./.github/workflows/build.yml # Path to your build workflow
+
   release-plugin:
     permissions:
       contents: write
       pull-requests: write
 
-    needs: find-draft
-    if: needs.find-draft.outputs.tag != ''
+    needs: ["find-draft", "call-build"]
+    if: success()
     uses: ./.github/workflows/release.yml
     with:
       tag: ${{ needs.find-draft.outputs.tag }}
@@ -66,8 +75,8 @@ jobs:
     permissions:
       contents: write
 
-    needs: [find-draft, release-plugin]
-    if: needs.find-draft.outputs.tag != ''
+    needs: ["find-draft", "release-plugin"]
+    if: success()
 
     steps:
       - name: Checkout repository
