@@ -13,6 +13,7 @@
     ":automergeRequireAllStatusChecks"
   ],
   "ignorePaths": [
-    ".github/workflows/**"
+    ".github/workflows/**",
+    "examples/**"
   ]
 }
