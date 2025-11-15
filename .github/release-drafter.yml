@@ -48,6 +48,9 @@ version-resolver:
       - "bugfix"
   default: patch
 
+exclude-labels:
+  - "files-sync"
+
 template: |
   ## Changes
 
