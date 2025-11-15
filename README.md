@@ -1,4 +1,4 @@
-[![🥁 Build](https://github.com/PrzemyslawSwiderski/python-uv-gradle-plugin/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/PrzemyslawSwiderski/python-uv-gradle-plugin/actions/workflows/gradle-build.yml)
+[![🥁 Build](https://github.com/PrzemyslawSwiderski/python-uv-gradle-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/PrzemyslawSwiderski/python-uv-gradle-plugin/actions/workflows/build.yml)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/PrzemyslawSwiderski/python-uv-gradle-plugin?label=Plugin%20Version&sort=semver&style=plastic)](https://plugins.gradle.org/plugin/com.pswidersk.python-uv-plugin)
 
 # Python uv Gradle Plugin
