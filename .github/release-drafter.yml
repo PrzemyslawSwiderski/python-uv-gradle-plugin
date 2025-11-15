@@ -30,7 +30,6 @@ autolabeler: # https://github.com/marketplace/actions/release-drafter#autolabele
       - '/bugfix\/.+/'
   - label: 'chore'
     branch:
-      - '/docs{0,1}\/.+/'
       - '/chore\/.+/'
 
 version-resolver:
