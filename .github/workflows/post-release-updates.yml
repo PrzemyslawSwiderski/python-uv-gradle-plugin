@@ -20,7 +20,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       # Update Samples Version to newly published one
       - name: Update Samples Version
@@ -36,27 +36,27 @@ jobs:
           VERSION="${{ inputs.release-version }}"
           BRANCH="chore/post-release-update-$VERSION"
           LABEL="post release update"
-          
+
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          
+
           git checkout -b $BRANCH
           git commit -am "Post release update - $VERSION"
           git push --set-upstream origin $BRANCH
-          
+
           gh label create "$LABEL" \
             --description "Pull requests with post release updates" \
             --force \
             || true
-          
+
           # Create PR and capture URL
           PR_URL=$(gh pr create \
             --title "Post release update - \`$VERSION\`" \
             --body "Current pull request contains patched files for the \`$VERSION\` version." \
             --label "$LABEL" \
             --head $BRANCH)
-          
+
           echo "Created PR at $PR_URL"
-          
+
           # Auto-merge PR (using squash method)
           gh pr merge --auto --squash --delete-branch "$PR_URL"
