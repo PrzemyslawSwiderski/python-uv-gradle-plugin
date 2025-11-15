@@ -1,0 +1,20 @@
+settings:
+  pull_request:
+    reviewers:
+      - 'PrzemyslawSwiderski'
+    labels:
+      - 'files-sync'
+
+patterns:
+  - files:
+      - from: gradle-plugin-template
+        to: ./
+        exclude:
+          - gradle-plugin-template/files-sync-config.yaml
+      
+    # delete_files:
+    #   - a-file-to-delete.md
+    #   - path: a/folder/to/delete
+    #     type: directory
+    repositories:
+      - PrzemyslawSwiderski/python-uv-gradle-plugin
