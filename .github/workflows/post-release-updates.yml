@@ -26,7 +26,7 @@ jobs:
       - name: Update Samples Version
         run: |
           VERSION="${{ inputs.release-version }}"
-          sed -i "s/pythonPluginVersionForExamples.*/pythonPluginVersionForExamples=$VERSION/g" gradle.properties
+          sed -i "s/pluginVersionForExamples.*/pluginVersionForExamples=$VERSION/g" gradle.properties
 
       # Create a pull request
       - name: Create Pull Request

@@ -5,10 +5,10 @@ include(
 )
 
 pluginManagement {
-    val pythonPluginVersionForExamples: String by settings
+    val pluginVersionForExamples: String by settings
 
     plugins {
-        id("com.pswidersk.python-uv-plugin") version pythonPluginVersionForExamples
+        id("com.pswidersk.python-uv-plugin") version pluginVersionForExamples
     }
 
     repositories {
