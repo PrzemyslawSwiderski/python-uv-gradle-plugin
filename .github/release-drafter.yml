@@ -31,6 +31,7 @@ autolabeler: # https://github.com/marketplace/actions/release-drafter#autolabele
   - label: 'chore'
     branch:
       - '/chore\/.+/'
+      - '/renovate\/.+/'
 
 version-resolver:
   major:

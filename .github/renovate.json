@@ -8,6 +8,11 @@
     "group:recommended",
     "mergeConfidence:age-confidence-badges",
     "replacements:all",
-    "workarounds:all"
+    "workarounds:all",
+    ":automergeAll",
+    ":automergeRequireAllStatusChecks"
+  ],
+  "ignorePaths": [
+    ".github/workflows/**"
   ]
 }
