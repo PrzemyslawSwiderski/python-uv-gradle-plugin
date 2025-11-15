@@ -4,9 +4,8 @@
 # documentation.
 name: 🥁 Build
 on:
-  # Trigger the workflow on pushes to only the 'main' branch (this avoids duplicate checks being run e.g., for dependabot pull requests)
   push:
-    branches: [main]
+    branches: [main, master]
   # Trigger the workflow on any pull request
   pull_request:
   # Allow this workflow to be called from other workflows
@@ -18,7 +17,6 @@ concurrency:
 
 jobs:
   build:
-    if: ${{ github.actor != 'dependabot[bot]' }}
     name: Build
     runs-on: ${{ matrix.os }}
     strategy:
