@@ -15,20 +15,20 @@ change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 
 autolabeler: # https://github.com/marketplace/actions/release-drafter#autolabeler
-  - label: 'breaking'
+  - label: "breaking"
     branch:
       - '/breaking\/.+/'
       - '/feat!\/.+/'
       - '/feature!\/.+/'
-  - label: 'feature'
+  - label: "feature"
     branch:
       - '/feature\/.+/'
       - '/feat\/.+/'
-  - label: 'bugfix'
+  - label: "bugfix"
     branch:
       - '/fix\/.+/'
       - '/bugfix\/.+/'
-  - label: 'chore'
+  - label: "chore"
     branch:
       - '/chore\/.+/'
       - '/renovate\/.+/'
@@ -51,6 +51,7 @@ version-resolver:
 
 exclude-labels:
   - "files-sync"
+  - "post release update"
 
 template: |
   ## Changes
