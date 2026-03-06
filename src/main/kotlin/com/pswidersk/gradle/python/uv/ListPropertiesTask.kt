@@ -1,8 +1,10 @@
 package com.pswidersk.gradle.python.uv
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.TaskAction
 
+@CacheableTask
 abstract class ListPropertiesTask : DefaultTask() {
 
     private val uvExtension: UvExtension = project.uvExtension

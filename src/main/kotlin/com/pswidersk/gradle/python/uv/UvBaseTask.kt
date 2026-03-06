@@ -3,9 +3,11 @@ package com.pswidersk.gradle.python.uv
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.AbstractExecTask
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
+@CacheableTask
 abstract class UvBaseTask(
     objects: ObjectFactory
 ) : AbstractExecTask<UvBaseTask>(UvBaseTask::class.java) {
