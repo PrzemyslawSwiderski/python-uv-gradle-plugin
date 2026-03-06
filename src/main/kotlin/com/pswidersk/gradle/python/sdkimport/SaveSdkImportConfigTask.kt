@@ -1,14 +1,13 @@
 package com.pswidersk.gradle.python.sdkimport
 
-import com.pswidersk.gradle.python.uv.UvExtension
 import com.pswidersk.gradle.python.uv.SDK_IMPORT_FILE_NAME
+import com.pswidersk.gradle.python.uv.UvExtension
 import com.pswidersk.gradle.python.uv.uvExtension
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.io.File
 
+@CacheableTask
 abstract class SaveSdkImportConfigTask : DefaultTask() {
 
     private val uvExtension: UvExtension = project.uvExtension
@@ -21,6 +20,7 @@ abstract class SaveSdkImportConfigTask : DefaultTask() {
     @get:OutputFile
     lateinit var sdkConfigFile: File
 
+    @PathSensitive(value = PathSensitivity.RELATIVE)
     @get:InputFile
     lateinit var inputFile: File
 
